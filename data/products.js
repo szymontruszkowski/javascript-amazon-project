@@ -1,3 +1,6 @@
+/*
+Array of products we want to show on amazon page.
+*/
 const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
