@@ -47,7 +47,7 @@ products.forEach((product) => {
 
       <div class="product-spacer"></div>
 
-      <div class="added-to-cart">
+      <div class="added-to-cart js-added-to-cart-${product.id}">
         <img src="images/icons/checkmark.png">
         Added
       </div>
@@ -111,5 +111,16 @@ document.querySelectorAll('.js-add-to-cart')
 
       // Show cart quantity in top right corner of the page.
       document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+
+      // Get <div> element with "Added" message.
+      const addedMessage = document.querySelector(`.js-added-to-cart-${productId}`);
+
+      // Show "Added" message.
+      addedMessage.classList.add('added-to-cart-visible');
+
+      // Hide "Added" message after 2 seconds.
+      setTimeout(() => {
+        addedMessage.classList.remove('added-to-cart-visible');
+      }, 2000);
     });
   });
