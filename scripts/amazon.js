@@ -1,11 +1,5 @@
-/*
-An array representing the cart.
-*/
-import {cart} from '../data/cart.js';
+import {cart, addToCart} from '../data/cart.js';
 
-/*
-An array representing all products.
-*/
 import {products} from '../data/products.js';
 
 /*
@@ -76,61 +70,44 @@ Put productsHTML in <div> marked with 'js-products-grid' class.
 */
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
+function updateCartQuantity() {
+  let cartQuantity = 0;
+
+  // Sum up total quantity of all products in the cart.
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+
+  // Show cart quantity in top right corner of the page.
+  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+}
+
 /*
-Check if selected product is already in the cart.
-If it is, increase the quantity.
-If it's not, add it to the cart.
+Show 'Added' message on amazon.html page after clicking Add to Cart button.
+*/
+function showAddedMessage(productId) {
+  // Get <div> element with "Added" message.
+  const addedMessage = document.querySelector(`.js-added-to-cart-${productId}`);
+
+  // Show "Added" message.
+  addedMessage.classList.add('added-to-cart-visible');
+
+  // Hide "Added" message after 2 seconds.
+  setTimeout(() => {
+    addedMessage.classList.remove('added-to-cart-visible');
+  }, 2000);
+}
+
+/*
+Click Event Listener for Add to Cart buttons.
 */
 document.querySelectorAll('.js-add-to-cart')
   .forEach((button) => {
     button.addEventListener('click', () => {
       const {productId} = button.dataset;
 
-      let matchingItem;
-      
-      // Check if selected product is already in the cart.
-      cart.forEach((item) => {
-        if (productId === item.productId) {
-          matchingItem = item;
-        }
-      });
-
-      // Get <select> element.
-      const quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);
-
-      // Get the value selected in <select> element.
-      const quantity = Number(quantitySelector.value);
-
-      // If product is already in the cart, increase the quantity.
-      // If it's not, add it to the cart.
-      if (matchingItem) {
-        matchingItem.quantity += quantity;
-      } else {
-        cart.push({
-          productId,
-          quantity
-        });
-      }
-
-      let cartQuantity = 0;
-
-      // Sum up total quantity of all products in the cart.
-      cart.forEach((item) => {
-        cartQuantity += item.quantity;
-      });
-
-      // Show cart quantity in top right corner of the page.
-      document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-
-      // Get <div> element with "Added" message.
-      const addedMessage = document.querySelector(`.js-added-to-cart-${productId}`);
-
-      // Show "Added" message.
-      addedMessage.classList.add('added-to-cart-visible');
-
-      // Hide "Added" message after 2 seconds.
-      setTimeout(() => {
-        addedMessage.classList.remove('added-to-cart-visible');
-      }, 2000);
+      addToCart(productId);
+      updateCartQuantity();
+      showAddedMessage(productId);
     });
   });
